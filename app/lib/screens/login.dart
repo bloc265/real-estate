@@ -42,11 +42,11 @@ class _LoginScreenState extends State<LoginScreen> {
                            hintStyle: TextStyle(color: Colors.blue[600]),
                            labelStyle: TextStyle(color: Colors.white),
                            enabledBorder: OutlineInputBorder(
-                             borderRadius: BorderRadius.circular(20),
+                             borderRadius: BorderRadius.circular(30),
                              borderSide:BorderSide(color: Colors.white)
                            ),
                            focusedBorder: OutlineInputBorder(
-                               borderRadius: BorderRadius.circular(20),
+                               borderRadius: BorderRadius.circular(30),
                                borderSide: BorderSide(color: Colors.white)
                            )
                          ),
@@ -64,13 +64,14 @@ class _LoginScreenState extends State<LoginScreen> {
                              hintStyle: TextStyle(color: Colors.blue[600]),
                              labelStyle: TextStyle(color: Colors.white),
                              enabledBorder: OutlineInputBorder(
-                                 borderRadius: BorderRadius.circular(20),
+                                 borderRadius: BorderRadius.circular(30),
                                  borderSide:BorderSide(color: Colors.white)
                              ),
                              focusedBorder: OutlineInputBorder(
-                                 borderRadius: BorderRadius.circular(20),
+                                 borderRadius: BorderRadius.circular(30),
                                  borderSide: BorderSide(color: Colors.white)
-                             )
+                             ),
+                           fillColor: Colors.white
                          ),
                        ),
                      ),

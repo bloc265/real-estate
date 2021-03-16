@@ -15,19 +15,19 @@ router.post("/register", async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
 
     if (user) {
-      res.send({ msg: "User already exist" });
+      res.send({ success: false, msg: "User already exist" });
     } else {
       const salt = await bcrypt.genSalt(10);
       const hash = await bcrypt.hash(req.body.password, salt);
       const new_user = new User({
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password,
+        password: hash,
         role: req.body.role,
       });
 
       await new_user.save();
-      res.send({ msg: "Account created successfully" });
+      res.send({ success: true, msg: "Account created successfully" });
     }
   } catch (err) {
     console.error(err);
