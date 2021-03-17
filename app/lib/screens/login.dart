@@ -1,4 +1,8 @@
+import 'package:app/services/api.dart';
+import 'package:app/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert' as convert;
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -20,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               children: [
 
-                Text('Welcome back', style: TextStyle(color: Colors.white.withOpacity(0.6), fontWeight: FontWeight.bold, fontSize: 30),),
+                Text('Welcome', style: TextStyle(color: Colors.white.withOpacity(0.6), fontWeight: FontWeight.bold, fontSize: 50),),
                SizedBox(
                  height: 20,
                ),
@@ -32,46 +36,66 @@ class _LoginScreenState extends State<LoginScreen> {
                    children: [
                      Padding(
                        padding: const EdgeInsets.only(left: 20, right: 20),
-                       child: TextFormField(
+                       child: Container(
+// padding: EdgeInsets.only(top:10, bottom: 0),
+                         decoration: BoxDecoration(
+                           color: Colors.white,
+                           borderRadius: BorderRadius.circular(30.1),
 
-                         controller: _email,
-                         decoration: InputDecoration(
-                           hintText: "Email",
-                           prefixIcon:Icon(Icons.person, color: Colors.white,) ,
-                           labelText: "Email",
-                           hintStyle: TextStyle(color: Colors.blue[600]),
-                           labelStyle: TextStyle(color: Colors.white),
-                           enabledBorder: OutlineInputBorder(
-                             borderRadius: BorderRadius.circular(30),
-                             borderSide:BorderSide(color: Colors.white)
+                         ),
+                         child: TextFormField(
+                           style: TextStyle(color: Colors.white),
+                           controller: _password,
+                           decoration: InputDecoration(
+
+                               prefixIcon: Padding(
+                                 padding: const EdgeInsets.only(left: 20, right: 20, bottom: 5),
+                                 child: Icon(Icons.email_rounded,size: 20,),
+                               ),
+                               hintText: "Email",
+
+                               focusedBorder: OutlineInputBorder(
+                                   borderRadius: BorderRadius.circular(30),
+                                   borderSide: BorderSide(color: Colors.white)
+                               )
+                             // hintStyle: TextStyle(color: Colors.blue[600]),
+                             // labelStyle: TextStyle(color: Colors.white),
+
+
                            ),
-                           focusedBorder: OutlineInputBorder(
-                               borderRadius: BorderRadius.circular(30),
-                               borderSide: BorderSide(color: Colors.white)
-                           )
                          ),
                        ),
                      ),
                      SizedBox(height: 30,),
                      Padding(
                        padding: const EdgeInsets.only(left: 20, right: 20),
-                       child: TextFormField(
-                         controller: _password,
-                         decoration: InputDecoration(
-                           prefixIcon: Icon(Icons.lock, color: Colors.white,),
-                             hintText: "Password",
-                             labelText: "Password",
-                             hintStyle: TextStyle(color: Colors.blue[600]),
-                             labelStyle: TextStyle(color: Colors.white),
-                             enabledBorder: OutlineInputBorder(
-                                 borderRadius: BorderRadius.circular(30),
-                                 borderSide:BorderSide(color: Colors.white)
+                       child: Container(
+// padding: EdgeInsets.only(top:10, bottom: 0),
+                         decoration: BoxDecoration(
+                             color: Colors.white,
+                           borderRadius: BorderRadius.circular(30.1),
+
+                         ),
+                         child: TextFormField(
+                           style: TextStyle(color: Colors.white),
+                           controller: _password,
+                           decoration: InputDecoration(
+
+                             prefixIcon: Padding(
+                               padding: const EdgeInsets.only(left: 20, right: 20),
+                               child: Icon(Icons.lock,size: 20,),
                              ),
-                             focusedBorder: OutlineInputBorder(
-                                 borderRadius: BorderRadius.circular(30),
-                                 borderSide: BorderSide(color: Colors.white)
-                             ),
-                           fillColor: Colors.white
+                               hintText: "Password",
+
+                               focusedBorder: OutlineInputBorder(
+                                   borderRadius: BorderRadius.circular(30),
+                                   borderSide: BorderSide(color: Colors.white)
+                               )
+                               // hintStyle: TextStyle(color: Colors.blue[600]),
+                               // labelStyle: TextStyle(color: Colors.white),
+
+
+                           ),
                          ),
                        ),
                      ),
@@ -81,7 +105,34 @@ class _LoginScreenState extends State<LoginScreen> {
                      FlatButton(
                        child: Text('Sign in', style: TextStyle(color: Colors.redAccent.withOpacity(0.8), fontSize: 30),),
                        onPressed: (){
+                        api().login(_email.text, _password.text).then((value){
+                          // print(value);
+                          var jsonData = convert.jsonDecode(value.body);
+                          var token = value.headers['authtoken'];
 
+                          if(jsonData["success"] == true){
+                            Constants.prefs.setBool("Loggedin", true);
+                            Constants.prefs.setString("token",token);
+                            Fluttertoast.showToast(
+                              msg:jsonData['msg'],
+                                textColor: Colors.white,
+                                backgroundColor: Colors.redAccent.withOpacity(0.8),
+                                gravity: ToastGravity.TOP,
+                                toastLength: Toast.LENGTH_SHORT
+                            );
+                          } else {
+                            Fluttertoast.showToast(
+                                msg:jsonData['msg'],
+                                textColor: Colors.white,
+                                backgroundColor: Colors.redAccent.withOpacity(0.8),
+                                gravity: ToastGravity.TOP,
+                                toastLength: Toast.LENGTH_SHORT
+                            );
+                          }
+
+
+                          // if(value)
+                        });
                        },
                      ),
                      SizedBox(

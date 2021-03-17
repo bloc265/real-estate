@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
+import '../services/api.dart';
 class SignUp extends StatefulWidget {
   @override
   _SignUpState createState() => _SignUpState();
@@ -119,30 +120,27 @@ class _SignUpState extends State<SignUp> {
                           ),
                           FlatButton(
                               onPressed: ()async{
-                                var response = await http.post('$url/register', body: {
-                                  'name':_name.text, 'email':_email.text, 'password':_password.text
-                                });
-                                var jsonData = convert.jsonDecode(response.body);
-                                if(jsonData['success'] == false){
-                                  Fluttertoast.showToast(
-                                    msg:jsonData['msg'],
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.TOP,
-                                    backgroundColor: Colors.redAccent.withOpacity(0.8),
-                                    textColor: Colors.white,
-
-                                  );
-                                } else {
-                                  Fluttertoast.showToast(
-                                    msg:jsonData['msg'],
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.TOP,
-                                    backgroundColor: Colors.redAccent.withOpacity(0.8),
-                                    textColor: Colors.white,
-
-                                  );
-                                  Navigator.pushReplacementNamed(context, '/login');
-                                }
+                                api().register(_name.text, _email.text, _password.text).then((value) => {
+                                   if(value['success'] == false){
+                                     Fluttertoast.showToast(
+                                       msg:value['msg'],
+                                       textColor: Colors.white,
+                                       backgroundColor: Colors.redAccent.withOpacity(0.8),
+                                       gravity: ToastGravity.TOP,
+                                       toastLength: Toast.LENGTH_SHORT
+                                     )
+                                   } else {
+                                     Fluttertoast.showToast(
+                                         msg:value['msg'],
+                                         textColor: Colors.white,
+                                         backgroundColor: Colors.redAccent.withOpacity(0.8),
+                                         gravity: ToastGravity.TOP,
+                                         toastLength: Toast.LENGTH_SHORT
+                                     ),
+                                     Navigator.pushReplacementNamed(context, '/login')
+                                   }
+                                   }
+                                );
 
                           },child:Text('Sign up', style: TextStyle(color: Colors.redAccent.withOpacity(0.8), fontSize: 30),) )
                         ],

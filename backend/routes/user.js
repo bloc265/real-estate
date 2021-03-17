@@ -48,10 +48,10 @@ router.post("/login", (req, res) => {
       } else {
         user.comparePassword(req.body.password, (err, isMatch) => {
           if (isMatch && !err) {
-            let token = jwt.sign(user, process.env.SECRET);
-            req.headers("authtoken", token);
-            console.log(req.headers);
-            res.json({ success: true, token: token });
+            let token = jwt.sign({ user: user }, process.env.SECRET);
+            res
+              .header("authtoken", token)
+              .json({ success: true, token: token, msg: "Authenticated" });
           } else {
             res.send({ msg: "Password incorrect" });
           }
